@@ -2,13 +2,12 @@
 
 #Load in relevant packages
 #install.packages("Package") if don't have it yet
+install.packages("tidyverse")
+install.packages("psych")
+
 #Example: install.packages("tidyverse")
 library(tidyverse)
 library(psych)
-
-##Set working directory
-
-setwd("C:/Users/stell/OneDrive/Documents/R/Thesis/Thesis")
 
 #Import dataset
 kinshipstudy<- read_csv("KinshipCleaned2.csv")
@@ -34,7 +33,7 @@ kinshipstudy<- read_csv("KinshipCleaned2.csv")
 kinshipstudy$Ind <- rowMeans(
   subset(kinshipstudy,
          select = c(IndCol_1,IndCol_3, IndCol_4, IndCol_7, IndCol_10)
-))
+  ))
 
 view(kinshipstudy$Ind)
 #found mean of each individualism question 
@@ -51,72 +50,109 @@ kinshipstudy$Col <- rowMeans(
          select = c(IndCol_2,IndCol_5, IndCol_6, IndCol_8, IndCol_9, IndCol_11, IndCol_12)
   ))
 
-kinshipstudy$Col%>%head(20)
 
 ###Confounds by relationship###
+## Z-Score before taking means 
+## Parents
+kinshipstudy$RelDist_1_z <- scale(kinshipstudy$RelDist_1)
+kinshipstudy$RelCont_1_z <- scale(kinshipstudy$RelCont_1)
+kinshipstudy$RelTalk_1_z <- scale(kinshipstudy$RelTalk_1)
+kinshipstudy$RelPhone_1_z <- scale(kinshipstudy$RelPhone_1)
+
+#Getting rid of the weird [] at the end of the variable name
+kinshipstudy$RelDist_1_z <- as.vector(kinshipstudy$RelDist_1_z)
+kinshipstudy$RelCont_1_z <- as.vector(kinshipstudy$RelCont_1_z)
+kinshipstudy$RelTalk_1_z <- as.vector(kinshipstudy$RelTalk_1_z)
+kinshipstudy$RelPhone_1_z <- as.vector(kinshipstudy$RelPhone_1_z)
+
+## Inlaws
+kinshipstudy$RelDist_2_z <- scale(kinshipstudy$RelDist_2)
+kinshipstudy$RelCont_2_z <- scale(kinshipstudy$RelCont_2)
+kinshipstudy$RelTalk_2_z <- scale(kinshipstudy$RelTalk_2)
+kinshipstudy$RelPhone_2_z <- scale(kinshipstudy$RelPhone_2)
+
+#Getting rid of the weird [] at the end of the variable name
+kinshipstudy$RelDist_2_z <- as.vector(kinshipstudy$RelDist_2_z)
+kinshipstudy$RelCont_2_z <- as.vector(kinshipstudy$RelCont_2_z)
+kinshipstudy$RelTalk_2_z <- as.vector(kinshipstudy$RelTalk_2_z)
+kinshipstudy$RelPhone_2_z <- as.vector(kinshipstudy$RelPhone_2_z)
+
+## Spouse
+kinshipstudy$RelDist_3_z <- scale(kinshipstudy$RelDist_3)
+kinshipstudy$RelCont_3_z <- scale(kinshipstudy$RelCont_3)
+kinshipstudy$RelTalk_3_z <- scale(kinshipstudy$RelTalk_3)
+kinshipstudy$RelPhone_3_z <- scale(kinshipstudy$RelPhone_3)
+
+#Getting rid of the weird [] at the end of the variable name
+kinshipstudy$RelDist_3_z <- as.vector(kinshipstudy$RelDist_3_z)
+kinshipstudy$RelCont_3_z <- as.vector(kinshipstudy$RelCont_3_z)
+kinshipstudy$RelTalk_3_z <- as.vector(kinshipstudy$RelTalk_3_z)
+kinshipstudy$RelPhone_3_z <- as.vector(kinshipstudy$RelPhone_3_z)
+
+## Friends
+kinshipstudy$RelDist_6_z <- scale(kinshipstudy$RelDist_6)
+kinshipstudy$RelCont_6_z <- scale(kinshipstudy$RelCont_6)
+kinshipstudy$RelTalk_6_z <- scale(kinshipstudy$RelTalk_6)
+kinshipstudy$RelPhone_6_z <- scale(kinshipstudy$RelPhone_6)
+
+#Getting rid of the weird [] at the end of the variable name
+kinshipstudy$RelDist_6_z <- as.vector(kinshipstudy$RelDist_6_z)
+kinshipstudy$RelCont_6_z <- as.vector(kinshipstudy$RelCont_6_z)
+kinshipstudy$RelTalk_6_z <- as.vector(kinshipstudy$RelTalk_6_z)
+kinshipstudy$RelPhone_6_z <- as.vector(kinshipstudy$RelPhone_6_z)
+
+#Acquaintances
+kinshipstudy$RelDist_7_z <- scale(kinshipstudy$RelDist_7)
+kinshipstudy$RelCont_7_z <- scale(kinshipstudy$RelCont_7)
+kinshipstudy$RelTalk_7_z <- scale(kinshipstudy$RelTalk_7)
+kinshipstudy$RelPhone_7_z <- scale(kinshipstudy$RelPhone_7)
+
+#Getting rid of the weird [] at the end of the variable name
+kinshipstudy$RelDist_7_z <- as.vector(kinshipstudy$RelDist_7_z)
+kinshipstudy$RelCont_7_z <- as.vector(kinshipstudy$RelCont_7_z)
+kinshipstudy$RelTalk_7_z <- as.vector(kinshipstudy$RelTalk_7_z)
+kinshipstudy$RelPhone_7_z <- as.vector(kinshipstudy$RelPhone_7_z)
+
 
 #ConfoundParents: RelDist_1, RelCont_1, RelTalk_1, RelPhone_1
 
 kinshipstudy$ConfPar <- rowMeans(
   subset(kinshipstudy,
-         select = c(RelDist_1, RelCont_1, RelTalk_1, RelPhone_1)
+         select = c(RelDist_1_z, RelCont_1_z, RelTalk_1_z, RelPhone_1_z)
   ))
 
-kinshipstudy$ConfPar%>%head(20)
 
 #ConfoundInlaws: RelDist_2, RelCont_2, RelTalk_2, RelPhone_2
 
 kinshipstudy$ConfInLaw <- rowMeans(
   subset(kinshipstudy,
-         select = c(RelDist_2, RelCont_2, RelTalk_2, RelPhone_2)
+         select = c(RelDist_2_z, RelCont_2_z, RelTalk_2_z, RelPhone_2_z)
   ))
 
-kinshipstudy$ConfInLaw%>%head(20)
 
 #ConfoundSpouse: RelDist_3, RelCont_3, RelTalk_3, RelPhone_3
 
 kinshipstudy$ConfSpouse<- rowMeans(
   subset(kinshipstudy,
-         select = c(RelDist_3, RelCont_3, RelTalk_3, RelPhone_3)
+         select = c(RelDist_3_z, RelCont_3_z, RelTalk_3_z, RelPhone_3_z)
   ))
 
-kinshipstudy$ConfSpouse%>%head(20)
-
-#ConfoundSibling:RelDist_4, RelCont_4, RelTalk_4, RelPhone_4
-
-kinshipstudy$ConfSib<- rowMeans(
-  subset(kinshipstudy,
-         select = c(RelDist_4, RelCont_4, RelTalk_4, RelPhone_4)
-  ))
-
-kinshipstudy$ConfSib%>%head(20)
-
-#ConfoundCousin:RelDist_5, RelCont_5, RelTalk_5, RelPhone_5
-
-kinshipstudy$ConfCous<- rowMeans(
-  subset(kinshipstudy,
-         select = c(RelDist_5, RelCont_5, RelTalk_5, RelPhone_5)
-  ))
-
-kinshipstudy$ConfCous%>%head(20)
 
 #ConfoundFriend:RelDist_6, RelCont_6, RelTalk_6, RelPhone_6
 
 kinshipstudy$ConfFriend<- rowMeans(
   subset(kinshipstudy,
-         select = c(RelDist_6, RelCont_6, RelTalk_6, RelPhone_6)
+         select = c(RelDist_6_z, RelCont_6_z, RelTalk_6_z, RelPhone_6_z)
   ))
 
-kinshipstudy$ConfFriend%>%head(20)
 
 #ConfoundAcq:RelDist_7, RelCont_7, RelTalk_7, RelPhone_7
 
 kinshipstudy$ConfAcq<- rowMeans(
   subset(kinshipstudy,
-         select = c(RelDist_7, RelCont_7, RelTalk_7, RelPhone_7)
+         select = c(RelDist_7_z, RelCont_7_z, RelTalk_7_z, RelPhone_7_z)
   ))
 
-kinshipstudy$ConfAcq%>%head(20)
 
 ###Closeness###
 #CloseParents: ParClose_1, ParClose_2
@@ -126,7 +162,6 @@ kinshipstudy$ClosePar<- rowMeans(
          select = c(ParClose_1, ParClose_2)
   ))
 
-kinshipstudy$ClosePar%>%head(20)
 
 #CloseInlaws: PPClose_1, PPClose_2
 
@@ -135,7 +170,6 @@ kinshipstudy$CloseInLaws<- rowMeans(
          select = c(PPClose_1, PPClose_2)
   ))
 
-kinshipstudy$CloseInLaws%>%head(20)
 
 #CloseSpouse:
 
@@ -144,25 +178,6 @@ kinshipstudy$CloseSpouse<- rowMeans(
          select = c(PartClose_1, PartClose_2)
   ))
 
-kinshipstudy$CloseSpouse%>%head(20)
-
-#CloseSibling:
-
-kinshipstudy$CloseSib<- rowMeans(
-  subset(kinshipstudy,
-         select = c(SibClose_1, SibClose_2)
-  ))
-
-kinshipstudy$CloseSib%>%head(20)
-
-#CloseCousin:
-
-kinshipstudy$CloseCousin<- rowMeans(
-  subset(kinshipstudy,
-         select = c(CousinClose_1, CousinClose_2)
-  ))
-
-kinshipstudy$CloseCousin%>%head(20)
 
 #CloseFriend: 
 
@@ -171,7 +186,6 @@ kinshipstudy$CloseFriend<- rowMeans(
          select = c(FriendClose_1, FriendClose_2)
   ))
 
-kinshipstudy$CloseFriend%>%head(20)
 
 #CloseAcq: 
 
@@ -180,7 +194,6 @@ kinshipstudy$CloseAcq<- rowMeans(
          select = c(AcqClose_1, AcqClose_2)
   ))
 
-kinshipstudy$CloseAcq%>%head(20)
 
 ###Communal Strength###
 #CommParents: RelBen_1, RelHap_1
@@ -190,8 +203,6 @@ kinshipstudy$CommStrPar<- rowMeans(
          select = c(RelBen_1, RelHap_1, RelCost_1, RelPrior_1)
   ))
 
-kinshipstudy$CommStrPar%>%head(20)
-
 #CommInLaws:
 
 kinshipstudy$CommStrInLaw<- rowMeans(
@@ -199,7 +210,6 @@ kinshipstudy$CommStrInLaw<- rowMeans(
          select = c(RelBen_2, RelHap_2, RelCost_2, RelPrior_2)
   ))
 
-kinshipstudy$CommStrInLaw%>%head(20)
 
 #CommSpouse:
 
@@ -208,36 +218,15 @@ kinshipstudy$CommStrSpouse<- rowMeans(
          select = c(RelBen_3, RelHap_3, RelCost_3, RelPrior_3)
   ))
 
-kinshipstudy$CommStrSpouse%>%head(20)
-
-#CommSibling:
-
-kinshipstudy$CommStrSib<- rowMeans(
-  subset(kinshipstudy,
-         select = c(RelBen_4, RelHap_4, RelCost_4, RelPrior_4
-)
-  ))
-
-kinshipstudy$CommStrSib%>%head(20)
-
-#CommCousin:
-
-kinshipstudy$CommStrCous<- rowMeans(
-  subset(kinshipstudy,
-         select = c(RelBen_5, RelHap_5, RelCost_5, RelPrior_5)
-  ))
-
-kinshipstudy$CommStrCous%>%head(20)
 
 #CommFriend
 
 kinshipstudy$CommStrFriend<- rowMeans(
   subset(kinshipstudy,
          select = c( RelBen_6, RelHap_6, RelCost_6, RelPrior_6
-)
+         )
   ))
 
-kinshipstudy$CommStrFriend%>%head(20)
 
 #CommAcq:
 
@@ -246,7 +235,6 @@ kinshipstudy$CommStrAcq<- rowMeans(
          select = c( RelBen_7, RelHap_7, RelCost_7, RelPrior_7)
   ))
 
-kinshipstudy$CommStrAcq%>%head(20)
 
 ###Perceived support###
 #SuppParents:ParSup_1, ParSup_2, ParSup_3
@@ -256,16 +244,12 @@ kinshipstudy$SuppPar<- rowMeans(
          select = c(ParSup_1, ParSup_2, ParSup_3)
   ))
 
-kinshipstudy$SuppPar%>%head(20)
-
 #SuppInlaws: 
 
 kinshipstudy$SuppInLaws<- rowMeans(
   subset(kinshipstudy,
          select = c(PPSup_1, PPSup_2, PPSup_3)
   ))
-
-kinshipstudy$SuppInLaws%>%head(20)
 
 #SuppSpouse:
 
@@ -274,34 +258,12 @@ kinshipstudy$SuppSpouse<- rowMeans(
          select = c(PartSup_1, PartSup_2, PartSup_3)
   ))
 
-kinshipstudy$SuppSpouse%>%head(20)
-
-#SuppSibling:
-
-kinshipstudy$SuppSib<- rowMeans(
-  subset(kinshipstudy,
-         select = c(SibSup_1, SibSup_2, SibSup_3)
-  ))
-
-kinshipstudy$SuppSib%>%head(20)
-
-#SuppCousin:
-
-kinshipstudy$SuppCous<- rowMeans(
-  subset(kinshipstudy,
-         select = c(CousinSup_1, CousinSup_2, CousinSup_3)
-  ))
-
-kinshipstudy$SuppCous%>%head(20)
-
 #SuppFriend:
 
 kinshipstudy$SuppFriend<- rowMeans(
   subset(kinshipstudy,
          select = c(FriendSup_1, FriendSup_2, FriendSup_3)
   ))
-
-kinshipstudy$SuppFriend%>%head(20)
 
 #SuppAcq:
 
@@ -310,8 +272,11 @@ kinshipstudy$SuppAcq<- rowMeans(
          select = c(AcqSup_1, AcqSup_2, AcqSup_3)
   ))
 
-kinshipstudy$SuppAcq%>%head(20)
- 
+
+##Demographic Cleaning
+#RelLength Variable
+kinshipstudy$RelLength<-kinshipstudy$RelLength_Text_1+(kinshipstudy$RelLength_Text_2/12)
+
 
 #Race data cleaning
 #Create overall race variable
@@ -353,28 +318,79 @@ for (i in 1:nrow(kinshipstudy)) { #For each row
 #Standardizing helping scenarios
 #https://statisticsglobe.com/z-score-in-r
 
-#TimeHelp_1 (Parents i think)
-kinshipstudy$TimeHelp1_Z<- scale(kinshipstudy$TimeHelp_1)
+#Time help standarization - z-score
+kinshipstudy$ParentsTime_Z<- as.numeric(scale(kinshipstudy$TimeHelp_1))
+kinshipstudy$ParentsTime_Z <- as.vector(kinshipstudy$ParentsTime_Z)
 
-mean(kinshipstudy$TimeHelp1_Z, na.rm = T)
-SD(kinshipstudy$TimeHelp1_Z, na.rm = T)
+kinshipstudy$InlawsTime_Z<- as.numeric(scale(kinshipstudy$TimeHelp_2))
+kinshipstudy$InlawsTime_Z <- as.vector(kinshipstudy$InlawsTime_Z)
 
-#MoneyHelp_1
-kinshipstudy$MoneyHelp1_z <- scale(kinshipstudy$MoneyHelp_1)
+kinshipstudy$SpouseTime_Z<- as.numeric(scale(kinshipstudy$TimeHelp_3))
+kinshipstudy$SpouseTime_Z <- as.vector(kinshipstudy$SpouseTime_Z)
 
-mean(kinshipstudy$MoneyHelp1_z, na.rm = T)
-sd(kinshipstudy$MoneyHelp1_z, na.rm = T)
+kinshipstudy$FriendTime_Z<- as.numeric(scale(kinshipstudy$TimeHelp_6))
+kinshipstudy$FriendTime_Z <- as.vector(kinshipstudy$FriendTime_Z)
 
-kinshipstudy$SibCous<-0
+kinshipstudy$AcqTime_Z<- as.numeric(scale(kinshipstudy$TimeHelp_7))
+kinshipstudy$AcqTime_Z <- as.vector(kinshipstudy$AcqTime_Z)
 
-for (i in 1:nrow(kinshipstudy)) { #For each row
-  if ((kinshipstudy$RelCheck_1[i] + kinshipstudy$RelCheck_2[i]) > 0) { #If sib/cousin is checked off
-    kinshipstudy$SibCous[i] <- 1 #1 = they have a sibling and/or cousin
-  } else { #For whatever reason, it's all blank or don't want to say
-    kinshipstudy$SibCous[i] <- 0 #Leave Race blank so won't count towards totals
-  }}
+mean(kinshipstudy$ParentsTime_Z, na.rm = T)
+SD(kinshipstudy$ParentsTime_Z, na.rm = T)
+# M = 4.985086e-17, SD = 1
+
+mean(kinshipstudy$InlawsTime_Z, na.rm = T)
+SD(kinshipstudy$InlawsTime_Z, na.rm = T)
+# M = -1.128873e-16, SD = 1
+
+mean(kinshipstudy$SpouseTime_Z, na.rm = T)
+SD(kinshipstudy$SpouseTime_Z, na.rm = T)
+# M = -8.902712e-17, SD = 1
+
+
+mean(kinshipstudy$FriendTime_Z, na.rm = T)
+SD(kinshipstudy$FriendTime_Z, na.rm = T)
+# M = -4.266008e-17, SD = 1
+
+mean(kinshipstudy$AcqTime_Z, na.rm = T)
+SD(kinshipstudy$AcqTime_Z, na.rm = T)
+# M =  9.379609e-18, SD = 1
+
+#MoneyHelp Standardization - Z-Score
+kinshipstudy$ParentsMoney_Z<- as.numeric(scale(kinshipstudy$MoneyHelp_1))
+kinshipstudy$ParentsMoney_Z<- as.vector(kinshipstudy$ParentsMoney_Z)
+
+kinshipstudy$InlawsMoney_Z<-as.numeric(scale(kinshipstudy$MoneyHelp_2))
+kinshipstudy$InlawsMoney_Z<-as.vector(kinshipstudy$InlawsMoney_Z)
+
+kinshipstudy$SpouseMoney_Z<-as.numeric(scale(kinshipstudy$MoneyHelp_3))
+kinshipstudy$SpouseMoney_Z<-as.vector(kinshipstudy$SpouseMoney_Z)
+
+kinshipstudy$FriendMoney_Z<-as.numeric(scale(kinshipstudy$MoneyHelp_6))
+kinshipstudy$FriendMoney_Z<-as.vector(kinshipstudy$FriendMoney_Z)
+
+kinshipstudy$AcqMoney_Z<-as.numeric(scale(kinshipstudy$MoneyHelp_7))
+kinshipstudy$AcqMoney_Z<-as.vector(kinshipstudy$AcqMoney_Z)
+
+mean(kinshipstudy$ParentsMoney_Z, na.rm = T)
+SD(kinshipstudy$ParentsMoney_Z, na.rm = T)
+# M = 1.166289e-16, SD = 1
+
+mean(kinshipstudy$InlawsMoney_Z, na.rm = T)
+SD(kinshipstudy$InlawsMoney_Z, na.rm = T)
+# M = -3.406267e-17, SD = 1
+
+mean(kinshipstudy$SpouseMoney_Z, na.rm = T)
+SD(kinshipstudy$SpouseMoney_Z, na.rm = T)
+# M = -4.152746e-18, SD = 1
+
+mean(kinshipstudy$FriendMoney_Z, na.rm = T)
+SD(kinshipstudy$FriendMoney_Z, na.rm = T)
+# M = 5.037418e-17, SD = 1
+
+mean(kinshipstudy$AcqMoney_Z, na.rm = T)
+SD(kinshipstudy$AcqMoney_Z, na.rm = T)
+# M = -4.515677e-17, SD = 1
+
 
 ##Saving new dataset
 write_csv(kinshipstudy, "kinship_cleaned_3.8.2023.csv")
-
-kinshipstudy<-kinshipstudy[,-209]
