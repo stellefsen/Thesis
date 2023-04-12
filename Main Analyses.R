@@ -1,6 +1,9 @@
 install.packages("reghelper")
 
+kinshipstudy<- read_csv("kinship_wide.csv")
+
 #####   Correlations   #####
+cor.test(kinshipstudy$Ind, kinshipstudy$Col)
 
 #Individualism x Time Help
 cor.test(kinshipstudy$Ind, kinshipstudy$ParentsTime_Z)
@@ -102,31 +105,31 @@ cor.test(kinshipstudy$TimeHelp_7, kinshipstudy$MoneyHelp_7)
 #Parents 
 IndParentsM<-lm(ParentsMoney_Z~Ind, data = kinshipstudy)
 IndParentsT<-lm(ParentsTime_Z~Ind, data = kinshipstudy)
-ColParentsM<-lm(ParentsMoney_Z~Col, data = kinshipstudy)
+ColParentsM<-lm(MoneyHelp_1~COL_C + IND_C, data = kinshipstudy)
 ColParentsT<-lm(ParentsTime_Z~Col, data = kinshipstudy)
 
 #Inlaws
 IndInlawsM<-lm(InlawsMoney_Z~Ind, data = kinshipstudy)
 IndInlawsT<-lm(InlawsTime_Z~Ind, data = kinshipstudy)
-ColInlawsM<-lm(InlawsMoney_Z~Col, data = kinshipstudy)
+ColInlawsM<-lm(MoneyHelp_2~COL_C + IND_C, data = kinshipstudy)
 ColInlawsT<-lm(InlawsTime_Z~Col, data = kinshipstudy)
 
 #Spouse
 IndSpouseM<-lm(SpouseMoney_Z~Ind, data = kinshipstudy)
 IndSpouseT<-lm(SpouseTime_Z~Ind, data = kinshipstudy)
-ColSpouseM<-lm(SpouseMoney_Z~Col, data = kinshipstudy)
-ColSpouseT<-lm(SpouseTime_Z~Col, data = kinshipstudy)
+ColSpouseM<-lm(MoneyHelp_3~COL_C + IND_C, data = kinshipstudy)
+ColSpouseT<-lm(TimeHelp_3~COL_C + IND_C, data = kinshipstudy)
 
 #Friend
 IndFriendM<-lm(FriendMoney_Z~Ind, data = kinshipstudy)
 IndFriendT<-lm(FriendTime_Z~Ind, data = kinshipstudy)
-ColFriendM<-lm(FriendMoney_Z~Col, data = kinshipstudy)
+ColFriendM<-lm(MoneyHelp_6~COL_C + IND_C, data = kinshipstudy)
 ColFriendT<-lm(FriendTime_Z~Col, data = kinshipstudy)
 
 #Acq
 IndAcqM<-lm(AcqMoney_Z~Ind, data = kinshipstudy)
 IndAcqT<-lm(AcqTime_Z~Ind, data = kinshipstudy)
-ColAcqM<-lm(AcqMoney_Z~Col, data = kinshipstudy)
+ColAcqM<-lm(MoneyHelp_7~COL_C + IND_C, data = kinshipstudy)
 ColAcqT<-lm(AcqTime_Z~Col, data = kinshipstudy)
 
 #### Interaction Regressions
@@ -197,8 +200,9 @@ CloseParxIndxTime<-lm(ParentsTime_Z~ClosePar+Ind, data = kinshipstudy)
 CloseParxColxMoney<-lm(ParentsMoney_Z~ClosePar+Col, data = kinshipstudy)
 CloseParxColxTime<-lm(ParentsTime_Z~ClosePar+Col, data = kinshipstudy)
 
-###3-way interaction
-test<-lm(ParentsTime_Z~Col:ClosePar:Ind, data = kinshipstudy)
+### use asterisk for main effects/interactions
+### interaction
+test<-lm(ParentsTime_Z~Col*Ind, data = kinshipstudy)
 test2<-lm(ParentsMoney_Z~ClosePar+Col:ClosePar+Ind, data = kinshipstudy)
 
 ###CommStr, Ind, ParentsMoney_Z
@@ -214,6 +218,12 @@ Int<-lm(ParentsTime_Z~CommStrPar+Col:CommStrPar+Ind, data = kinshipstudy)
 Int2<-lm(ParentsMoney_Z~CommStrPar+Col:CommStrPar+Ind, data = kinshipstudy)
 Int3<-lm(ParentsTime_Z~CommStrPar:Col:Ind, data = kinshipstudy)
 
+### Closeness ~ Relationship x Culture Regression
+CloseParxRelxCulture<-lm(ClosePar~IND_C*COL_C, data = kinshipstudy)
+CloseSpousexRelxCulture<-lm(CloseSpouse~IND_C*COL_C, data = kinshipstudy)
+CloseInLawsxRelxCulture<-lm(CloseInLaws~IND_C*COL_C, data = kinshipstudy)
+CloseFriendxRelxCulture<-lm(CloseFriend~IND_C*COL_C, data = kinshipstudy)
+CloseAcqxRelxCulture<-lm(CloseAcq~IND_C*COL_C, data = kinshipstudy)
 ### Simple Slope for Interactions
 
 
@@ -232,13 +242,15 @@ library(car)
 
 kinship_long <- read_csv("kinship_long.csv")
 
-kinship_long$Relationship <- factor(kinship_long$Relationship)
+#Relationship is a categorical variable (factor)
+kinship_long$Relationship <- factor(kinship_long$Relationship) 
 
 #Replace NAs with 0s for Time and Money DVs, if needed
 kinship_long$TimeGiven[is.na(kinship_long$TimeGiven)] = 0
 kinship_long$MoneyGiven[is.na(kinship_long$MoneyGiven)] = 0
 
 #Trying ANCOVA
+# ANCOVA : analysis of covariance, continuous variable 
 #https://stats.stackexchange.com/questions/502460/how-can-i-run-repeated-measure-ancova-in-r
 
 #Time DV
@@ -279,6 +291,49 @@ MoneyColMeans <- aov(MoneyGiven ~ Relationship * COL_C + IND_C + Error(aid/Relat
 
 summary(MoneyColMeans)
 
+# Closeness ~ Relationship x Culture 
+CloseIndMeans <- aov(Closeness ~ Relationship * IND_C + COL_C + Error(aid/Relationship),
+                     data = kinship_long)
+
+summary(CloseIndMeans)
+
+## CommStr~Relationship x Culture
+CommStrColMeans<- aov(CommStr ~ Relationship * COL_C + IND_C + Error(aid/Relationship),
+                     data = kinship_long)
+
+summary(CommStrColMeans)
+
+CommStrIndMeans<- aov(CommStr ~ Relationship * IND_C + COL_C + Error(aid/Relationship),
+                      data = kinship_long)
+
+summary(CommStrIndMeans)
+
+# Closeness ~ Relationship x Culture 
+CloseIndMeans <- aov(Closeness ~ Relationship * IND_C + COL_C + Error(aid/Relationship),
+                     data = kinship_long)
+
+summary(CloseIndMeans)
+
+CloseColMeans <- aov(Closeness ~ Relationship * COL_C + IND_C + Error(aid/Relationship),
+                     data = kinship_long)
+
+summary(CloseColMeans)
+
+## PSS ~ Relationship x Culture 
+PSSIndMeans <- aov(Supp ~ Relationship * IND_C + COL_C + Error(aid/Relationship),
+                     data = kinship_long)
+
+summary(PSSIndMeans)
+
+PSSColMeans <- aov(Supp ~ Relationship * IND_C + COL_C + Error(aid/Relationship),
+                     data = kinship_long)
+
+summary(PSSColMeans)
+
+## Time ~ Relationship x Closeness 
+# Ask Dan and Nancy 
+
+
 #MLM test
 indTime <- lmer(TimeGiven ~ Relationship * IND_C + COL_C + (1 + Relationship | aid),
                 data = kinship_long, na.action = "na.exclude")
@@ -286,5 +341,6 @@ indTime <- lmer(TimeGiven ~ Relationship * IND_C + COL_C + (1 + Relationship | a
 #Error: number of observations (=1070) <= number of random effects (=1070) for term (1 + Relationship | aid);
 #the random-effects parameters and the residual variance (or scale parameter) are probably unidentifiable
 #With long dataset, get error "boundary (singular) fit: see help('isSingular')"
+
 
 
