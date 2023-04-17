@@ -28,7 +28,7 @@ summary(TimeIndMeans)
 #emmeans for just Relationships
 TimeRelEmmeans <- emmeans(TimeIndMeans, ~ Relationship)
 
-#Contrasts
+#See the contrasts
 pairs(TimeRelEmmeans)
 
 #Relationship x Col (controlling for individualism)
@@ -63,3 +63,21 @@ indTime <- lmer(TimeGiven ~ Relationship * IND_C + COL_C + (1 + Relationship | a
 #Error: number of observations (=1070) <= number of random effects (=1070) for term (1 + Relationship | aid);
 #the random-effects parameters and the residual variance (or scale parameter) are probably unidentifiable
 #With long dataset, get error "boundary (singular) fit: see help('isSingular')"
+
+
+### New package found, added April 17 ###
+#https://www.datanovia.com/en/lessons/repeated-measures-anova-in-r
+library(rstatix)
+
+#Time DV
+#Relationship x Ind (controlling for collectivism)
+TimeRelInd <- anova_test(
+  data = kinship_long,
+  dv = TimeGiven,
+  wid = aid,
+  within = Relationship,
+  between = IND_C,
+  covariate = COL_C)
+
+get_anova_table(TimeRelInd)
+
