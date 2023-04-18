@@ -103,13 +103,13 @@ cor.test(kinshipstudy$TimeHelp_7, kinshipstudy$MoneyHelp_7)
 ##Cultural Orientation x Time/Money Given, by relationship ##
 
 #Parents 
-IndParentsM<-lm(ParentsMoney_Z~Ind, data = kinshipstudy)
+IndParentsM<-lm(MoneyHelp_1 ~ IND_C + COL_C, data = kinshipstudy)
 IndParentsT<-lm(ParentsTime_Z~Ind, data = kinshipstudy)
 ColParentsM<-lm(MoneyHelp_1~COL_C + IND_C, data = kinshipstudy)
 ColParentsT<-lm(ParentsTime_Z~Col, data = kinshipstudy)
 
 #Inlaws
-IndInlawsM<-lm(InlawsMoney_Z~Ind, data = kinshipstudy)
+IndInlawsM<-lm(MoneyHelp_2~ IND_C + COL_C, data = kinshipstudy)
 IndInlawsT<-lm(InlawsTime_Z~Ind, data = kinshipstudy)
 ColInlawsM<-lm(MoneyHelp_2~COL_C + IND_C, data = kinshipstudy)
 ColInlawsT<-lm(InlawsTime_Z~Col, data = kinshipstudy)
@@ -224,6 +224,14 @@ CloseSpousexRelxCulture<-lm(CloseSpouse~IND_C*COL_C, data = kinshipstudy)
 CloseInLawsxRelxCulture<-lm(CloseInLaws~IND_C*COL_C, data = kinshipstudy)
 CloseFriendxRelxCulture<-lm(CloseFriend~IND_C*COL_C, data = kinshipstudy)
 CloseAcqxRelxCulture<-lm(CloseAcq~IND_C*COL_C, data = kinshipstudy)
+
+### Communal Strength ~ Relationship x Culture 
+CommStrParxRelxCulture<-lm(CommStrPar~IND_C*COL_C, data = kinshipstudy)
+CommStrSpousexRelxCulture<-lm(CommStrSpouse~IND_C*COL_C, data = kinshipstudy)
+CommStrInLawsxRelxCulture<-lm(CommStrInLaw~IND_C*COL_C, data = kinshipstudy)
+CommStrFriendxRelxCulture<-lm(CommStrFriend~IND_C*COL_C, data = kinshipstudy)
+CommStrAcqxRelxCulture<-lm(CommStrAcq~IND_C*COL_C, data = kinshipstudy)
+
 ### Simple Slope for Interactions
 
 
@@ -296,6 +304,7 @@ CloseIndMeans <- aov(Closeness ~ Relationship * IND_C + COL_C + Error(aid/Relati
                      data = kinship_long)
 
 summary(CloseIndMeans)
+
 
 ## CommStr~Relationship x Culture
 CommStrColMeans<- aov(CommStr ~ Relationship * COL_C + IND_C + Error(aid/Relationship),
