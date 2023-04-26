@@ -1,6 +1,9 @@
 library(tidyverse)
 library(psych)
+install.packages(jtools)
 library(jtools)
+install.packages(svglite)
+
 
 #Long dataset
 kinship_long <- read_csv("kinship_long.csv")
@@ -114,7 +117,7 @@ MoneyColPlot <- ggplot(kinship_long, aes(x = COL_C,
   scale_x_continuous(breaks = seq(-3, 2, by = 1)) +
   scale_y_continuous(breaks = seq(0, 2000, by = 200)) +
   xlab("\nCollectivism (centered)") +
-  ylab("Money Given to Each Relationship ($)")
+  ylab("Money Given ($)")
 
 MoneyColPlot
 
