@@ -1,5 +1,6 @@
 ##### Main Analyses Finalized/Cleaned Up #####
-
+install.packages("ggiraphExtra")
+library(ggiraphExtra)
 library(tidyverse)
 library(psych)
 library(emmeans)
@@ -34,6 +35,8 @@ TimeRelCol <- aov(TimeGiven ~ Relationship * COL_C + IND_C + Error(aid),
 
 summary(TimeRelCol)
 #Same as individualism, so use same TimeRelEmmeans
+TimeRelEmmeans <- emmeans(TimeRelCol, ~ Relationship)
+pairs(TimeRelEmmeans)
 
 #Money
 #Individualism
@@ -151,6 +154,7 @@ SuppRelCol <- lmer(Supp ~ Relationship * COL_C + IND_C + (1 | aid),
                    data = kinship_long)
 
 anova(SuppRelCol)
+
 
 #Post-hoc
 summary(SuppRelCol)
